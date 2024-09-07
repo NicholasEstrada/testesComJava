@@ -1,7 +1,6 @@
 package io.calculadouura.runExt;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 public class Validator {
@@ -18,7 +17,7 @@ public class Validator {
 
             for (ExpressaoValidacao expressaoValidacao : padrao.getExpressoes()) {
 
-                if(validacaoHashMap.get(expressaoValidacao) == null) validacaoHashMap.put(expressaoValidacao, false);
+                validacaoHashMap.putIfAbsent(expressaoValidacao, false);
 
                 if (expressaoValidacao.getExpressao().contains(";")) {
                     String[] conteudoArquivoSplit = conteudoArquivo.split(";");
@@ -81,23 +80,6 @@ public class Validator {
             boolean allTrue = validacaoHashMap.values().stream().allMatch(Boolean::booleanValue);
             if(allTrue) resultado.append(padrao.getNomePadrao()).append(";");
 
-            /*try {
-                Iterator<ExpressaoValidacao> itValidacoes = validacaoHashMap.keySet().iterator();
-                while (itValidacoes.hasNext()) {
-
-                    ExpressaoValidacao keyer = itValidacoes.next();
-                    Boolean resultado = validacaoHashMap.get(keyer);
-
-                    System.out.println("resultado: "+resultado + " |HUMMMM: " + keyer.getExpressao());
-
-                    if(!resultado){
-                        return "Validação não encontrou os termos: " + keyer.getExpressao();
-                    }
-                }
-            } catch (Exception e) {}
-
-
-            return "Validado como: " + padrao.getNomePadrao();*/
         }
 
         return resultado.toString();
