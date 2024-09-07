@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Validator {
+    private static Float INDICE_LEVENSHTEIN = 0.9F;
 
     public static String validar(String conteudoArquivo) {
         String[] stringsConteudo= conteudoArquivo.split(";");
@@ -19,10 +20,45 @@ public class Validator {
 
                 if(validacaoHashMap.get(expressaoValidacao) == null) validacaoHashMap.put(expressaoValidacao, false);
 
-                if (expressaoValidacao.getExpressao().contains(";")){
-                    // IDEIA implementar algo semelhante ao "public String getTipoPlanilha"
-                    if (conteudoArquivo.contains(expressaoValidacao.getExpressao())) {
-                        validacaoHashMap.put(expressaoValidacao, true);
+                if (expressaoValidacao.getExpressao().contains(";")) {
+                    String[] conteudoArquivoSplit = conteudoArquivo.split(";");
+                    String[] expressaoValidacaoSplit = expressaoValidacao.getExpressao().split(";");
+
+                    boolean encontrouSequencia = false;
+
+                    for (int i = 0; i < conteudoArquivoSplit.length; i++) {
+                        double similaridade = calcularSimilaridadeLevenshtein(expressaoValidacaoSplit[0], conteudoArquivoSplit[i]);
+
+                        // Se a primeira palavra for similar, verificar as próximas
+                        if (similaridade >= INDICE_LEVENSHTEIN) {
+                            encontrouSequencia = true;
+
+                            // Verificar as próximas palavras da expressão
+                            for (int j = 1; j < expressaoValidacaoSplit.length; j++) {
+                                if (i + j >= conteudoArquivoSplit.length) {
+                                    // Se não houver mais conteúdo para comparar, interromper
+                                    encontrouSequencia = false;
+                                    break;
+                                }
+
+                                double similaridadeProxima = calcularSimilaridadeLevenshtein(expressaoValidacaoSplit[j], conteudoArquivoSplit[i + j]);
+
+                                if (similaridadeProxima < INDICE_LEVENSHTEIN) {
+                                    // Se uma das próximas palavras não corresponder, interromper
+                                    encontrouSequencia = false;
+                                    break;
+                                }
+                            }
+
+                            if (encontrouSequencia) {
+                                validacaoHashMap.put(expressaoValidacao, true);
+                                break; // Encontramos uma sequência válida, podemos parar
+                            }
+                        }
+                    }
+
+                    if (!encontrouSequencia) {
+                        validacaoHashMap.put(expressaoValidacao, false);
                     }
                 }
 
@@ -34,7 +70,7 @@ public class Validator {
                 } else if(!expressaoValidacao.getExpressao().contains(";")){
                     for(String conteudo : stringsConteudo){
                         double similaridade = calcularSimilaridadeLevenshtein(expressaoValidacao.getExpressao(), conteudo);
-                        if (similaridade < 0.90) validacaoHashMap.put(expressaoValidacao, true);
+                        if (similaridade < INDICE_LEVENSHTEIN) validacaoHashMap.put(expressaoValidacao, true);
                     }
 
                 }
