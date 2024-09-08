@@ -1,0 +1,42 @@
+[
+  {
+    "nomePadrao": "Padrão Teste",
+    "categoria": "Teste",
+    "expressoes": [
+      {
+        "expressao": "^[a-zA-Z]+$",
+        "isRegex": true
+      },
+      {
+        "expressao": "example",
+        "isRegex": false
+      },
+      {
+        "expressao": "data;valor;documento",
+        "isRegex": false
+      }
+    ]
+  },
+  {
+    "nomePadrao": "Extrato_Tribanco_PDF",
+    "categoria": "EXTRATO",
+    "expressoes": [
+      {
+        "expressao": "TRIBANCOONLINE.COM.BR",
+        "isRegex": false
+      },
+      {
+        "expressao": "TRIBANCO ONLINE",
+        "isRegex": false
+      },
+      {
+        "expressao": "DATA;MOVIMENTACAO;TIPO;DOCUMENTO;VALOR",
+        "isRegex": false
+      },
+      {
+        "expressao": "HOME;CONTA CORRENTE;EXTRATO",
+        "isRegex": false
+      }
+    ]
+  }
+]

@@ -17,4 +17,7 @@ class ExpressaoValidacao {
         return expressao;
     }
 
+    public boolean getIsRegex() {
+        return isRegex;
+    }
 }

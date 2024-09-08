@@ -1,5 +1,11 @@
 package io.calculadouura.runExt;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,6 +96,19 @@ public class PadraoValidacao {
 
         padroes.add(padraoValidacaotribanco);
 
+        return padroes;
+    }
+
+
+    public static List<PadraoValidacao> carregarPadroesDeJson(String filePath) {
+        Gson gson = new Gson();
+        List<PadraoValidacao> padroes = null;
+        try (FileReader reader = new FileReader(filePath)) {
+            Type padraoListType = new TypeToken<List<PadraoValidacao>>() {}.getType();
+            padroes = gson.fromJson(reader, padraoListType);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return padroes;
     }
 }
